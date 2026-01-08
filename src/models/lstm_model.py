@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 from tensorflow import keras
-from tensorflow.keras import layers
+
+layers = keras.layers
+models = keras.models
 
 from src.data.pipeline import fetch_yahoo
 from src.data.preprocess import time_split, scale_close, make_sequences
@@ -75,3 +77,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
