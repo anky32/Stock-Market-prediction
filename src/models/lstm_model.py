@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from tensorflow import keras
+import os
+import joblib
 
 layers = keras.layers
 models = keras.models
@@ -54,6 +56,17 @@ def main():
     model = build_lstm(lookback)
     model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, verbose=1)
 
+    # =========================
+    # SAVE TRAINED LSTM + SCALER
+    # =========================
+    os.makedirs("models_saved", exist_ok=True)
+
+    model.save("models_saved/lstm.h5")
+    joblib.dump(scaler, "models_saved/scaler.pkl")
+
+    print("✅ LSTM model saved to models_saved/lstm.h5")
+    print("✅ Scaler saved to models_saved/scaler.pkl")
+
     # 5) Predict (scaled)
     y_pred_scaled = model.predict(X_test, verbose=0).ravel()
 
@@ -77,4 +90,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

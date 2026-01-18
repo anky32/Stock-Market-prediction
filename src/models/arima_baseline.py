@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from pmdarima import auto_arima
+import joblib
+import os
 
 from src.data.pipeline import fetch_yahoo
 from src.data.preprocess import time_split
@@ -34,13 +36,27 @@ def main():
     y_train = train_df["close"].astype(float)
     y_test = test_df["close"].astype(float)
 
+    # =========================
+    # TRAIN ARIMA MODEL
+    # =========================
     model = fit_arima(y_train)
 
-    # Forecast exactly the length of the test set
+    # =========================
+    # SAVE TRAINED ARIMA MODEL
+    # =========================
+    os.makedirs("models_saved", exist_ok=True)
+    joblib.dump(model, "models_saved/arima.pkl")
+    print("✅ ARIMA model saved to models_saved/arima.pkl")
+
+    # =========================
+    # FORECAST ON TEST SET
+    # =========================
     n = len(y_test)
     y_pred = model.predict(n_periods=n)
 
-    # Metrics
+    # =========================
+    # EVALUATION METRICS
+    # =========================
     m_mae = mae(y_test.values, y_pred)
     m_rmse = rmse(y_test.values, y_pred)
 
@@ -50,10 +66,12 @@ def main():
     print("MAE:", m_mae)
     print("RMSE:", m_rmse)
 
-    # quick sanity peek
+    # Quick sanity peek
     print("First 5 actual:", y_test.values[:5])
     print("First 5 pred  :", np.array(y_pred)[:5])
 
 
 if __name__ == "__main__":
     main()
+
+    # python src/models/arima_baseline.py
