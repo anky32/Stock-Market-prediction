@@ -4,6 +4,9 @@ from pmdarima import auto_arima
 import joblib
 import os
 
+layers = keras.layers
+models = keras.models
+
 from src.data.pipeline import fetch_yahoo
 from src.data.preprocess import time_split
 from src.eval.metrics import mae, rmse
@@ -73,5 +76,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    # python src/models/arima_baseline.py
